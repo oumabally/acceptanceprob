@@ -12,13 +12,14 @@ st.set_page_config(layout="wide")
 st.title("Customer Acceptance Modeling Dashboard")
 st.write("An interactive analytical tool for exploring how pricing, lead time, and order size influence customer acceptance behavior in make-to-order supply chain environments. The interface provides visualizations of acceptance probability, price elasticity, and lead time elasticity through heatmaps, 3D surfaces, and sensitivity analyses. Users can compare multiple bounded probability models and examine how operational inputs and model parameters affect customer response patterns and tradeoffs in make-to-order firm settings.")
 
-# SYMBOLIC VARIABLES
+
+# variables
 lt_sym, p_sym, s_sym = sp.symbols('lt p s')
 beta0_sym, beta1_sym, beta2_sym, beta3_sym, prob_max_sym = sp.symbols(
     'beta0 beta1 beta2 beta3 prob_max'
 )
 
-# MODEL SELECTION
+
 #Drop down menu of different fucntion to model acceptance probability 
 
 st.sidebar.subheader("Acceptance Probability Model")
@@ -33,14 +34,14 @@ model_choice = st.sidebar.selectbox(
     ]
 )
 
-# COMMON EXPONENT
+# define common exponenet
 z = ((beta3_sym * s_sym)
     *
     ( beta1_sym * lt_sym +
     beta2_sym * p_sym
     ))
 
-# MODEL DEFINITIONS
+# model definitions for equations
 if model_choice == "Logistic":
     expr = prob_max_sym / (
         1 + beta0_sym * sp.exp(z)
@@ -61,10 +62,10 @@ elif model_choice == "Rational Function":
         1 / (1 + z**2)
     )
 
-# DISPLAY EQUATION
+# Equation display
 st.sidebar.latex(sp.latex(expr))
 
-# CREATE NUMERICAL FUNCTIONS
+# creating numerical functions
 func = sp.lambdify(
     (
         lt_sym,
@@ -115,9 +116,8 @@ dP_dp_func = sp.lambdify(
     "numpy"
 )
 
-# =========================
-# SIDEBAR PARAMETERS
-# =========================
+
+# Sidebar parrameters
 st.sidebar.header("Model Parameters")
 
 beta0 = st.sidebar.slider("β₀", 0.1, 5.0, 0.5)
@@ -371,9 +371,9 @@ def plot_superimposed_heatmap(beta1_range, beta2_range, sizes, costs, lead_times
 
     return fig
 
-# =========================
-# HEATMAP FUNCTIONS (FIXED: USE MARKUP)
-# =========================
+
+# functions for heatmap from colab
+
 
 
 def calc_acceptance_prob(lead_time, size, markup, baseline_cost, beta0, beta1,beta2,beta3,prob_max):
@@ -432,9 +432,9 @@ def plot_acceptance_heatmap(size, beta0, beta1,beta2,beta3,prob_max):
     return fig
 
 
-# =========================
-# TAB 2 (FOCUS FIX)
-# =========================
+
+# functions for second tab on acceptance probability
+
 
 def plot_leadtime_curve(
     fixed_price,
@@ -574,9 +574,9 @@ def plot_price_curve(
 
     return fig
 
-# =========================
-# TABS
-# =========================
+
+# Tab 1 and 2
+
 
 tab1, tab2 = st.tabs(["Elasticity Analysis", "Acceptance Probability"])
 
@@ -650,7 +650,7 @@ with tab2:
 
     col1, col2 = st.columns(2)
 
-    # 3D PLOT (NOW USES MARKUPS)
+    # 3d plots
     with col1:
         st.subheader("3D Acceptance Surface")
 
@@ -681,7 +681,7 @@ with tab2:
 
         st.pyplot(fig)
 
-    # HEATMAPS (NOW USE MARKUPS)
+    # heat maps
     with col2:
         st.subheader("Acceptance Heatmaps")
 
@@ -696,10 +696,9 @@ with tab2:
             )
             st.pyplot(fig_hm)
     
-    # =========================
-    # 2D ACCEPTANCE CURVES
-    # =========================
 
+    #2d graphs for acceptance proability
+   
     st.subheader("2D Acceptance Probability Curves")
 
     # Controls
@@ -718,9 +717,9 @@ with tab2:
 
     curve_col1, curve_col2 = st.columns(2)
 
-    # -------------------------
-    # Lead Time Curve
-    # -------------------------
+
+    # Leadtime 2d graph
+
 
     with curve_col1:
 
@@ -735,9 +734,8 @@ with tab2:
 
         st.pyplot(fig_lt_curve)
 
-    # -------------------------
-    # Price Curve
-    # -------------------------
+
+    # Price 2d graph
 
     with curve_col2:
 
