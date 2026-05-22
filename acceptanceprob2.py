@@ -10,8 +10,7 @@ import sympy as sp
 st.set_page_config(layout="wide")
 
 st.title("Customer Acceptance Modeling Dashboard")
-st.write("Explore how price, lead time, and size impact acceptance probability.")
-
+st.write("An interactive analytical tool for exploring how pricing, lead time, and order size influence customer acceptance behavior in make-to-order supply chain environments. The interface provides visualizations of acceptance probability, price elasticity, and lead time elasticity through heatmaps, 3D surfaces, and sensitivity analyses. Users can compare multiple bounded probability models and examine how operational inputs and model parameters affect customer response patterns and tradeoffs in make-to-order firm settings.
 
 # SYMBOLIC VARIABLES
 lt_sym, p_sym, s_sym = sp.symbols('lt p s')
